@@ -2,7 +2,15 @@ import numpy as np
 
 
 def mesh_function(f, t):
-    pass
+    t0 = t(0)
+    u0 = f(0)
+    I = u0
+    T = t(-1)
+    Nt = len(t)
+    dt = T/Nt
+    u = np.zeros(Nt+1)
+    u = f(t)
+    return u
 
 def func(t):
     pass
