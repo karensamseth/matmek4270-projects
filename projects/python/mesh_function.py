@@ -13,7 +13,12 @@ def mesh_function(f, t):
     return u
 
 def func(t):
-    pass
+    for i in range(len(t)+1):
+        if t[i]<=0 & t[i]>=3:
+            f_mesh[i] = e**(-t[i])
+        elif t[i]<=3 & t[i]>=4:
+            f_mesh[i] = e**(-3*t[i])
+    return f_mesh
 
 def test_mesh_function():
     t = np.array([1, 2, 3, 4])
