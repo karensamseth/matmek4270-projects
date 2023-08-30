@@ -24,7 +24,25 @@ def differentiate(u, dt):
     return d
 
 def differentiate_vector(u, dt):
-    pass
+    """
+    Input:
+    u exact function
+    dt time step
+    Return:
+    d discrete derivative of the mesh function un
+    
+    Finds discrete derivative by centered differences for all the points in the    
+    middle, and by forward/backward dfferences for the end points.
+    
+    Using vectorization/array computing, for speeding up the calculations.
+    """
+    dt = float(dt)         #avoid integer division
+    d[0] = (u[1]-u[0])/dt  #starting point
+    d[-1] = (u[-1]-u[-2])/dt #end point
+    d[1:-1] = (u[2:]-u[0:-2])(2*dt) #points in the middle
+    return d
+    
+    
 
 def test_differentiate():
     t = np.linspace(0, 1, 10)
