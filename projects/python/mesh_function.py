@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def mesh_function(f, t):
     """
     Input: 
@@ -11,16 +10,16 @@ def mesh_function(f, t):
     an array with mesh point values for f.
     """
     dt = 0.1
-    Nt = int(t(-1)/dt)
+    Nt = int(t[-1]/dt)
     T = Nt*dt
     u = np.zeros(Nt+1)
-    t_i = t(0)
+    t_i = t[0]
     for i in range(Nt+1):
-        u[i] = f(t_i)
+        u[i] = f[i]         #hva er poenget med denne?
         t_i = t_i + dt
     return u
 
-def func(t):
+def func(t):                #burde jeg heller bare sette denne rett inn i mesh_function? Denne diskretiserer jo også...
     """
     Input:
     t array of mesh points
@@ -30,14 +29,14 @@ def func(t):
         f(t) = e**(-3t) for 3<t<=4
     """
     f = np.zeros(len(t))
-    for i in range(len(t)+1):
-        if t[i]<=0 & t[i]>=3:
+    for i in range(len(t)):
+        if t[i]<=0 and t[i]>=3:
             f[i] = e**(-t[i])
-        elif t[i]<3 & t[i]>=4:
+        elif t[i]<3 and t[i]>=4:
             f[i] = e**(-3*t[i])
     return f
 
-t = linspace(0,4)
+t = np.linspace(0,4)
 print(mesh_function(func(t),t))
 
 def test_mesh_function():
@@ -45,3 +44,4 @@ def test_mesh_function():
     f = np.array([np.exp(-1), np.exp(-2), np.exp(-3), np.exp(-12)])
     fun = mesh_function(func, t)
     assert np.allclose(fun, f)
+
