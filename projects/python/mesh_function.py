@@ -12,21 +12,17 @@ def mesh_function(f, t):
     n = len(t)
     u = np.zeros(n)
     for i, ti in enumerate(t):
-        u[i] = f(ti)   
-    #i=0    
-    #for ti in t:
-    #    u[i] = func(ti) 
-    #    i+=1
+        u[i] = f(ti)  #finner funksjonsverdien til hvert tidspunkt, setter i array u
     return u
 
 def func(t):              
     """
     Input:
-    t array of mesh points
+    t ett tidspunkt
     Returns:
-    f an array with points, calculated by
-        f(t) = e**(-t) for 0<=t<=3
-        f(t) = e**(-3t) for 3<t<=4
+    f en funksjonsverdi,
+        f(t) = exp(-t) for 0<=t<=3
+        f(t) = exp(-3t) for 3<t<=4
     """
     if t>=0 and t<=3:
         return np.exp(-t)
@@ -44,5 +40,5 @@ def test_mesh_function():
     assert np.allclose(fun, f)
     print("Works!")
 
-if __name__ == "__main__":
+if __name__ == "__main__":    #kjører testfunksjonen
     test_mesh_function()
