@@ -19,7 +19,7 @@ def differentiate(u, dt):
     t = np.linspace(0,T,Nt+1) # time mesh
     d[0] = (u[1]-u[0])/dt  #starting point
     d[-1] = (u[-1]-u[-2])/dt #end point
-    for i in range(2,Nt-1):  #the points in the middle
+    for i in range(1,Nt-1):  #the points in the middle
         d[i] = (u[i+1]-u[i-1])/(2*dt) 
     return d
 
