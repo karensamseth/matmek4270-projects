@@ -13,13 +13,13 @@ def differentiate(u, dt):
     middle, and by forward/backward dfferences for the end points.
     """
     dt = float(dt)         #avoid integer division
-    Nt = int(round(T/dt))  #nr of time intervals
+    Nt = len(u) #nr of time intervals
     T = Nt*dt              #adjust T to fit time step dt
     d = np.zeros(Nt+1)     #array of u[n] values
     t = np.linspace(0,T,Nt+1) # time mesh
     d[0] = (u[1]-u[0])/dt  #starting point
     d[-1] = (u[-1]-u[-2])/dt #end point
-    for i in range(2,Nt):  #the points in the middle
+    for i in range(2,Nt-1):  #the points in the middle
         d[i] = (u[i+1]-u[i-1])/(2*dt) 
     return d
 
@@ -37,9 +37,11 @@ def differentiate_vector(u, dt):
     Using vectorization/array computing, for speeding up the calculations.
     """
     dt = float(dt)         #avoid integer division
+    Nt = len(u)
+    d = np.zeros(Nt+1)     #array of u[n] values
     d[0] = (u[1]-u[0])/dt  #starting point
     d[-1] = (u[-1]-u[-2])/dt #end point
-    d[1:-1] = (u[2:]-u[0:-2])(2*dt) #points in the middle
+    d[1:-1] = (u[2:]-u[0:-2])/(2*dt) #points in the middle
     return d
     
     
