@@ -1,6 +1,6 @@
 import numpy as np
 
-def mesh_function(f, t):
+def mesh_function(func, t):
     """
     Input: 
     f Python function
@@ -9,17 +9,13 @@ def mesh_function(f, t):
     Return:
     an array with mesh point values for f.
     """
-    dt = 0.1
-    Nt = int(t[-1]/dt)
-    T = Nt*dt
-    u = np.zeros(Nt+1)
-    t_i = t[0]
-    for i in range(Nt+1):
-        u[i] = f[i]         #hva er poenget med denne?
-        t_i = t_i + dt
+    n = len(t)
+    u = np.zeros(n)
+    for i, ti in enumerate(t):
+        u[i] = func(ti)       
     return u
 
-def func(t):                #burde jeg heller bare sette denne rett inn i mesh_function? Denne diskretiserer jo også...
+def func(t):              
     """
     Input:
     t array of mesh points
@@ -28,16 +24,14 @@ def func(t):                #burde jeg heller bare sette denne rett inn i mesh_f
         f(t) = e**(-t) for 0<=t<=3
         f(t) = e**(-3t) for 3<t<=4
     """
-    f = np.zeros(len(t))
-    for i in range(len(t)):
-        if t[i]<=0 and t[i]>=3:
-            f[i] = np.exp(-t[i])
-        elif t[i]<3 and t[i]>=4:
-            f[i] = np.exp(-3*t[i])
-    return f
+    if t<=0 and t>=3:
+        return np.exp(-t)
+    elif t<3 and t>=4:
+        return np.exp(-3*t)
+    return RuntimeError
 
 t = np.linspace(0,4)
-print(mesh_function(func(t),t))
+print(mesh_function(func,t))
 
 def test_mesh_function():
     t = np.array([1, 2, 3, 4])
