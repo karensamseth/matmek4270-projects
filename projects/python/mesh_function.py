@@ -31,9 +31,9 @@ def func(t):                #burde jeg heller bare sette denne rett inn i mesh_f
     f = np.zeros(len(t))
     for i in range(len(t)):
         if t[i]<=0 and t[i]>=3:
-            f[i] = e**(-t[i])
+            f[i] = np.exp(-t[i])
         elif t[i]<3 and t[i]>=4:
-            f[i] = e**(-3*t[i])
+            f[i] = np.exp(-3*t[i])
     return f
 
 t = np.linspace(0,4)
