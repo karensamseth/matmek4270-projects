@@ -41,7 +41,7 @@ def differentiate_vector(u, dt):
     d = np.zeros(Nt+1)     #array of u[n] values
     d[0] = (u[1]-u[0])/dt  #starting point
     d[-1] = (u[-1]-u[-2])/dt #end point
-    d[1:-1] = (u[2:]-u[0:-2])/(2*dt) #points in the middle
+    d[1:-2] = (u[2:]-u[0:-2])/(2*dt) #points in the middle
     return d
     
     
