@@ -13,7 +13,7 @@ import sympy as sp
 
 t = sp.Symbol('t')
 
-class VibSolver:
+class VibSolver: #fra Michael
     """
     Solve vibration equation::
 
@@ -143,8 +143,7 @@ class VibFD2(VibSolver):
     def __call__(self):
         u = np.zeros(self.Nt+1)
         u[0] = self.I #spesifikk grense, u(0)=I
-        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #for u'(0)=0, ENDRE
-        for n in range(1, self.Nt): #samme som i VipHPL
+        for n in range(1, self.Nt): #samme som i VibHPL
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
         u[-1] = self.I #spesifikk grense, u(T)=I
         return u
@@ -168,8 +167,7 @@ class VibFD3(VibSolver):
     def __call__(self):
         u = np.zeros(self.Nt+1)
         u[0] = self.I #u(0)=0
-        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #ENDRE!!
-        for n in range(1, self.Nt): #samme som i VipHPL
+        for n in range(1, self.Nt): #samme som i VibHPL
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
         u[-1] = (2*self.dt*self.I+2*u[-2])/(2-self.dt**2*self.w**2) #u'(T)=0
         return u
@@ -196,7 +194,7 @@ class VibFD4(VibFD2):
         u[-2] = (10*u[-1]-4*u[-3]+14*u[-4]-6*u[-5]+u[-6])/l #skewed scheme
         return u
 
-def test_order():
+def test_order(): #fra Michael
     w = 0.35
     VibHPL(8, 2*np.pi/w, w).test_order()
     VibFD2(8, 2*np.pi/w, w).test_order()
