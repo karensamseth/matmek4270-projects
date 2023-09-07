@@ -117,10 +117,10 @@ class VibHPL(VibSolver):
     """
     order = 2
 
-    def __call__(self):
+    def __call__(self): #fra Michael
         u = np.zeros(self.Nt+1)
-        u[0] = self.I
-        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0]
+        u[0] = self.I #u(0)=I
+        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #u'(0)=0
         for n in range(1, self.Nt):
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
         return u
@@ -171,7 +171,7 @@ class VibFD3(VibSolver):
         u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #ENDRE!!
         for n in range(1, self.Nt): #samme som i VipHPL
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
-        u[-1] = (2*self.dt*self.I+2*u[-2])/(2-dt**2*w**2) # u'(T)=0, T = N*dt
+        u[-1] = (2*self.dt*self.I+2*u[-2])/(2-self.dt**2*self.w**2) #u'(T)=0
         return u
 
 class VibFD4(VibFD2):
@@ -186,6 +186,14 @@ class VibFD4(VibFD2):
 
     def __call__(self):
         u = np.zeros(self.Nt+1)
+        u[0] = self.I #spesifikk grense, u(0)=I
+        l = 15-12*self.dt**2*self.w**2 #konstant til n=1 og n=N-1
+        u[1] = (u[5]-6*u[4]+14*u[3]-4*u[2]+10*u[0])/l #skewed scheme
+        k = -30+12*self.det**2*self.w**2 #konstant til de mellom
+        for n in range(2, self.Nt-1): 
+            u[n+2] = 16*u[n+1]+k*u[n]+15*u[n-1]-u[n-2] #4.ordens sentral d.s.
+        u[-1] = self.I #spesifikk grense, u(T)=I
+        u[-2] = (10*u[-1]-4*u[-3]+14*u[-4]-6*u[-5]+u[-6])/l #skewed scheme
         return u
 
 def test_order():
