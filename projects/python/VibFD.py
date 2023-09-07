@@ -6,6 +6,8 @@ In this module we study the vibration equation
 where w is a constant and f(t) is a source term assumed to be 0.
 We use various boundary conditions.
 
+FUNKER IKKE ENDA!
+
 """
 import numpy as np
 import matplotlib.pyplot as plt
