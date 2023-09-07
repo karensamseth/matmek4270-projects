@@ -142,11 +142,11 @@ class VibFD2(VibSolver):
 
     def __call__(self):
         u = np.zeros(self.Nt+1)
-        u[0] = self.I
-        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0]
-        for n in range(1, self.Nt):
+        u[0] = self.I #spesifikk grense, u(0)=I
+        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #for u'(0)=0, ENDRE
+        for n in range(1, self.Nt): #samme som i VipHPL
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
-        u[-1] = self.I
+        u[-1] = self.I #spesifikk grense, u(T)=I
         return u
 
 class VibFD3(VibSolver):
@@ -167,6 +167,11 @@ class VibFD3(VibSolver):
 
     def __call__(self):
         u = np.zeros(self.Nt+1)
+        u[0] = self.I #u(0)=0
+        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0] #ENDRE!!
+        for n in range(1, self.Nt): #samme som i VipHPL
+            u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
+        u[-1] = (2*self.dt*self.I+2*u[-2])/(2-dt**2*w**2) # u'(T)=0, T = N*dt
         return u
 
 class VibFD4(VibFD2):
