@@ -142,6 +142,11 @@ class VibFD2(VibSolver):
 
     def __call__(self):
         u = np.zeros(self.Nt+1)
+        u[0] = self.I
+        u[1] = u[0] - 0.5*self.dt**2*self.w**2*u[0]
+        for n in range(1, self.Nt):
+            u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
+        u[-1] = self.I
         return u
 
 class VibFD3(VibSolver):
