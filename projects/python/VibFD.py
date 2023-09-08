@@ -6,7 +6,7 @@ In this module we study the vibration equation
 where w is a constant and f(t) is a source term assumed to be 0.
 We use various boundary conditions.
 
-FUNKER IKKE ENDA!
+FUNKER IKKE ENDA i VibFD3!
 
 """
 import numpy as np
@@ -220,5 +220,5 @@ def test_order(): #fra Michael
 if __name__ == '__main__':
     #test_order()
     w = 0.35
-    v = VibFD4(16, 2*np.pi/w, w)
+    v = VibFD3(16, 2*np.pi/w, w)
     print(v.l2_error())
