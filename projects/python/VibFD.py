@@ -175,15 +175,13 @@ class VibFD3(VibSolver):
     def __call__(self):
         D2 = sparse.diags([np.ones(self.Nt), np.full(self.Nt+1, -2), np.ones(self.Nt)], np.array([-1, 0, 1]), (self.Nt+1, self.Nt+1), 'lil')
         D2 *= (1/self.dt**2) 
-        Id = sparse.eye(self.Nt+1)
+        Id = sparse.eye(self.Nt+1).tolil()
         A = D2 + self.w**2*Id
         A[0,:3] = 1, 0, 0 #u(0)=b(0)
-        A[self.Nt,-3:] = 0, 0, 1 #u(T)=b(T)
+        A[-1,-3:] = 0, -1/(1-self.dt**2*self.w**2), 1 #u'(T) = 0
         b = np.zeros(self.Nt+1)
         b[0] = self.I #u(0)=I
-        b[-1] = (2*u[-2])/(2-self.dt**2*self.w**2) #u'(T)=0
-        A.toarray()
-        u = sparse.linalg.spsolve(A, b)
+        u = sparse.linalg.spsolve(A.tocsr(), b)
         return u
 
 class VibFD4(VibFD2):
