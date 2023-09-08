@@ -175,10 +175,10 @@ class VibFD3(VibSolver):
     def __call__(self):
         D2 = sparse.diags([np.ones(self.Nt), np.full(self.Nt+1, -2), np.ones(self.Nt)], np.array([-1, 0, 1]), (self.Nt+1, self.Nt+1), 'lil')
         D2 *= (1/self.dt**2) 
-        Id = sparse.eye(self.Nt+1).tolil()
-        A = D2 + self.w**2*Id
+        Id = sparse.eye(self.Nt+1)
+        A = (D2 + self.w**2*Id).tolil()
         A[0,:3] = 1, 0, 0 #u(0)=b(0)
-        A[-1,-3:] = 0, -1/(1-self.dt**2*self.w**2), 1 #u'(T) = 0
+        A[-1,-3:] = 0, -1/(1-0.5*self.dt**2*self.w**2), 1 #u'(T)=0
         b = np.zeros(self.Nt+1)
         b[0] = self.I #u(0)=I
         u = sparse.linalg.spsolve(A.tocsr(), b)
@@ -220,5 +220,5 @@ def test_order(): #fra Michael
 if __name__ == '__main__':
     #test_order()
     w = 0.35
-    v = VibFD3(32, 2*np.pi/w, w)
+    v = VibFD4(16, 2*np.pi/w, w)
     print(v.l2_error())
