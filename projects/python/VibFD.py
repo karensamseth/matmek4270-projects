@@ -171,7 +171,7 @@ class VibFD3(VibSolver):
         u[0] = self.I #u(0)=0
         for n in range(1, self.Nt): #samme som i VibHPL
             u[n+1] = 2*u[n] - u[n-1] - self.dt**2*self.w**2*u[n]
-        u[-1] = (2*self.dt*self.I+2*u[-2])/(2-self.dt**2*self.w**2) #u'(T)=0
+        u[-1] = (2*u[-2])/(2-self.dt**2*self.w**2) #u'(T)=0
         return u
 
 class VibFD4(VibFD2):
