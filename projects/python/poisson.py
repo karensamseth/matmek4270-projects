@@ -118,7 +118,8 @@ def test_poisson():
     v=Poisson(L=2, N=10)
     tol = 1E-12
     ue=x**2
-    assert v.l2_error(ue)<tol
+    success=v.l2_error(ue)<tol
+    assert success
 
 if __name__ == '__main__':
     L = 2
