@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import scipy.sparse as sparse
 from sympy.utilities.lambdify import implemented_function
 
+#Alt er fra Michael. Jeg endrer kun test.
+
 x = sp.Symbol('x')
 
 class Poisson:
@@ -113,7 +115,10 @@ class Poisson:
         return np.sqrt(self.dx*np.sum((uj-u)**2))
 
 def test_poisson():
-    assert False
+    v=Poisson(L=2, N=10)
+    tol = 1E-12
+    ue=x**2
+    assert v.l2_error(ue)<tol
 
 if __name__ == '__main__':
     L = 2
