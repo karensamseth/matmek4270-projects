@@ -20,13 +20,36 @@ class Poisson2D:
         self.py = Poisson(Ly, Ny)
 
     def create_mesh(self):
-        """Return a 2D Cartesian mesh
+        """Uniform discretization of the line [0, L]
+
+        Parameters
+        ----------
+        Nx : int
+            The number of uniform intervals in x-direction
+        Ny : int
+            The number of uniform intervals in y-direction
+
+        Returns
+        -------
+        x : array
+            The mesh
+        y : array
+            The mesh
         """
-        raise NotImplementedError
+        self.Nx = Nx
+        self.Ny = Ny
+        self.dx = self.Lx / Nx
+        self.dy = self.Ly / Ny
+        self.x = np.linspace(0, self.Lx, self.Nx+1)
+        self.y = np.linspace(0, self.Ly, self.Ny+1)
+        mesh = np.meshgrid(self.x, self.y, indexing='ij')
+        return self.x, self.y, mesh
 
     def laplace(self):
         """Return a vectorized Laplace operator"""
-        raise NotImplementedError
+        D2x = (1./self.dx**2)*self.D2(self.Nx)
+        D2y = (1./self.dy**2)*self.D2(self.Ny)
+        return (sparse.kron(D2x, sparse.eye(self.Ny+1)) + sparse.kron(sparse.eye(self.Nx+1), D2y))
 
     def assemble(self, f=None):
         """Return assemble coefficient matrix A and right hand side vector b"""
