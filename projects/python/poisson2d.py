@@ -8,7 +8,7 @@ from poisson import Poisson
 x, y = sp.symbols('x,y')
 
 class Poisson2D:
-    r"""Solve Poisson's equation in 2D::
+    """Solve Poisson's equation in 2D::
 
         \nabla^2 u(x, y) = f(x, y), x, y in [0, Lx] x [0, Ly]
 
@@ -36,24 +36,42 @@ class Poisson2D:
         y : array
             The mesh
         """
-        self.Nx = Nx
-        self.Ny = Ny
-        self.dx = self.Lx / Nx
-        self.dy = self.Ly / Ny
-        self.x = np.linspace(0, self.Lx, self.Nx+1)
-        self.y = np.linspace(0, self.Ly, self.Ny+1)
-        mesh = np.meshgrid(self.x, self.y, indexing='ij')
-        return self.x, self.y, mesh
+        self.dx = self.Lx / self.px.N
+        self.dy = self.Ly / self.py.N
+        x = self.x = np.linspace(0, self.px.L, self.px.N+1)
+        y = self.y =np.linspace(0, self.py.L, self.py.N+1)
+        return np.meshgrid(x, y, indexing='ij')
 
     def laplace(self):
-        """Return a vectorized Laplace operator"""
-        D2x = (1./self.dx**2)*self.D2(self.Nx)
-        D2y = (1./self.dy**2)*self.D2(self.Ny)
+        """Return a vectorized Laplace operator. Using Kronecker product to calculate."""
+        D2x = (1./self.dx**2)*self.py.D2(self.Nx)
+        D2y = (1./self.dy**2)*self.py.D2(self.Ny)
         return (sparse.kron(D2x, sparse.eye(self.Ny+1)) + sparse.kron(sparse.eye(self.Nx+1), D2y))
 
     def assemble(self, f=None):
-        """Return assemble coefficient matrix A and right hand side vector b"""
-        raise NotImplementedError
+        """Assemble coefficient matrix and right hand side vector
+
+        Parameters
+        ----------
+        bc : 2-tuple of numbers
+            The boundary conditions at x=0 and x=L
+        f : Sympy Function
+            The right hand side as a Sympy function
+
+        Returns
+        -------
+        A : scipy sparse matrix
+            Coefficient matrix
+        b : 1D array
+            Right hand side vector
+        """
+        A = self.laplace()
+        B = np.ones((self.px.N+1,self.py.N+1), dtype=bool) #Matrise for å finne indekser for boundary cond.
+        B[1:-1,1:-1] = 0 #Matrise med 1 på kantene og 0 i midten.
+        bnds = np.where(B.ravel() == 1)[0] #Finner hvilke indekser i B som er 1. RAVEL???
+        xij, yij = self.create_mesh()
+        b = sp.lambdify((x,y),f)(xij,yij)        
+        return A.tocsr(), b
 
     def l2_error(self, u, ue):
         """Return l2-error
