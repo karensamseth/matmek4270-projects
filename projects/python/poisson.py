@@ -74,7 +74,6 @@ class Poisson:
         self.N = N
         self.dx = self.L / N
         self.x = np.linspace(0, self.L, self.N+1)
-        return self.x
 
     def __call__(self, N, bc=(0, 0), f=implemented_function('f', lambda x: 2)(x)):
         """Solve Poisson's equation
