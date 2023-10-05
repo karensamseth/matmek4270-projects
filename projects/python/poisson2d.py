@@ -69,8 +69,13 @@ class Poisson2D:
         B = np.ones((self.px.N+1,self.py.N+1), dtype=bool) #Matrise for å finne indekser for boundary cond.
         B[1:-1,1:-1] = 0 #Matrise med 1 på kantene og 0 i midten.
         bnds = np.where(B.ravel() == 1)[0] #Finner hvilke indekser i B som er 1. RAVEL???
+        A = A.tolil()
+        for i in bnds:
+            A[i] = 0
+            A[i,i] = 1
         xij, yij = self.create_mesh()
-        b = sp.lambdify((x,y),f)(xij,yij)        
+        b = sp.lambdify((x,y),f)(xij,yij)  
+        b[bnds] = 0
         return A.tocsr(), b
 
     def l2_error(self, u, ue):
@@ -78,12 +83,17 @@ class Poisson2D:
 
         Parameters
         ----------
-        u : array
-            The numerical solution (mesh function)
+        u : array_like
+            Numerical solution (mesh function)
         ue : Sympy function
             The analytical solution
+        Returns
+        -------
+        The l2-error as a number
+
         """
-        raise NotImplementedError
+        uj = sp.lambdify(x, ue)(self.x)
+        return np.sqrt(self.dx*np.sum((uj-u)**2))
 
     def __call__(self, f=implemented_function('f', lambda x, y: 2)(x, y)):
         """Solve Poisson's equation with a given righ hand side function
